@@ -1,27 +1,55 @@
-import { Injectable } from "@nestjs/common";
-import { OrdersRepository } from "src/prisma/repositories/orders.repository";
+import { ProductsService } from "@/modules/products/products.service";
+import { PrismaService } from "@/prisma/prisma.service";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { randomUUID } from "node:crypto";
+import { CreateOrderDto } from "./dtos/create-order.dto";
+import { OrderDto } from "./dtos/order.dto";
 
 @Injectable()
 export class OrdersService {
-  constructor(private readonly ordersRepository: OrdersRepository) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
-  async findAll() {
-    // Logic to fetch all orders
+  async getAll() {
+    // TODO: Pagination, filtering, sorting
+    // For now, just return all orders
+    return [];
   }
 
-  async findOne() {
-    // Logic to find a specific order by ID
-  }
+  async create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
+    if (!createOrderDto.items || createOrderDto.items.length === 0) {
+      throw new BadRequestException("Order must have at least one item.");
+    }
 
-  async findByStatus() {
-    // Logic to find orders by status
-  }
+    let totalAmount = 0;
 
-  async create() {
-    // Logic to create a new order
-  }
+    const orderItemsDetails = await Promise.all(
+      createOrderDto.items.map(async (item) => {
+        const product = await this.productsService.getProductById(
+          item.productId,
+        );
 
-  async delete() {
-    // Logic to delete an order by ID
+        const subtotal = product.price * item.quantity;
+        totalAmount += subtotal;
+
+        return {
+          product,
+          quantity: item.quantity,
+          subtotal,
+        };
+      }),
+    );
+
+    const newOrder: OrderDto = {
+      id: randomUUID(),
+      items: orderItemsDetails,
+      totalAmount,
+      status: "PENDING",
+      createdAt: new Date(),
+    };
+
+    return newOrder;
   }
 }

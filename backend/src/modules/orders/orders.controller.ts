@@ -1,4 +1,5 @@
-import { Controller, Delete, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
+import { CreateOrderDto } from "./dtos/create-order.dto";
 import { OrdersService } from "./orders.service";
 
 @Controller("orders")
@@ -6,29 +7,21 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get()
-  findAll() {
-    // TODO: Pagination, filtering, sorting
-    // For now, just return all orders
-    return this.ordersService.findAll();
+  getAll() {
+    return this.ordersService.getAll();
   }
 
   @Get(":id")
-  findOne() {
-    return this.ordersService.findOne();
-  }
+  findOne() {}
 
   @Get("status/:status")
-  findByStatus() {
-    return this.ordersService.findByStatus();
-  }
+  findByStatus() {}
 
   @Post()
-  create() {
-    return this.ordersService.create();
+  create(@Body() data: CreateOrderDto) {
+    return this.ordersService.create(data);
   }
 
   @Delete(":id")
-  delete() {
-    return this.ordersService.delete();
-  }
+  delete() {}
 }
