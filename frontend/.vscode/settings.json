@@ -1,4 +1,13 @@
 {
+  "[typescript][typescriptreact][javascript][json][jsonc][tailwindcss][css]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.codeActionsOnSave": {
+      "quickfix.biome": "explicit",
+      "source.organizeImports.biome": "explicit"
+    }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": ["biomejs"],
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true
   },
