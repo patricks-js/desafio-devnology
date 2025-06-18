@@ -1,7 +1,9 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
-import { BrazilianProvidersService } from "./brazilian-providers.service";
-import { EuropeanProvidersService } from "./european-providers.service";
+import { BrazilianProviderMapper } from "./mappers/brazilian-provider.mapper";
+import { EuropeanProviderMapper } from "./mappers/european-provider.mapper";
+import { BrazilianProvidersService } from "./services/brazilian-providers.service";
+import { EuropeanProvidersService } from "./services/european-providers.service";
 
 @Module({
   imports: [
@@ -10,7 +12,12 @@ import { EuropeanProvidersService } from "./european-providers.service";
       maxRedirects: 3,
     }),
   ],
-  providers: [BrazilianProvidersService, EuropeanProvidersService],
+  providers: [
+    BrazilianProvidersService,
+    EuropeanProvidersService,
+    BrazilianProviderMapper,
+    EuropeanProviderMapper,
+  ],
   exports: [BrazilianProvidersService, EuropeanProvidersService],
 })
 export class ProvidersModule {}
