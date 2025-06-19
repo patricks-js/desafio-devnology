@@ -1,4 +1,3 @@
-import { ProductDTO } from "@/modules/providers/dtos/product.dto";
 import { Injectable } from "@nestjs/common";
 import { BrazilianProvidersService } from "../../providers/services/brazilian-providers.service";
 import { EuropeanProvidersService } from "../../providers/services/european-providers.service";
@@ -36,12 +35,17 @@ export class ProductsService {
     return this.europeanProvidersService.getProductById(productId);
   }
 
-  async getFilteredProducts(filters: ProductFiltersDTO): Promise<ProductDTO[]> {
+  async getFilteredProducts(
+    filters: ProductFiltersDTO,
+    limit = 10,
+    offset = 0,
+  ) {
     const products = await this.getProducts();
 
     const cleanArray = (arr?: string[]) =>
       arr?.filter((v) => typeof v === "string" && v.trim() !== "") ?? undefined;
 
+    const q = filters.q?.trim() ?? "";
     const categories = cleanArray(filters.categories);
     const departments = cleanArray(filters.departments);
     const materials = cleanArray(filters.materials);
@@ -53,7 +57,9 @@ export class ProductsService {
       ? undefined
       : Number(filters.maxPrice);
 
-    return products.filter((product) => {
+    const filtered = products.filter((product) => {
+      const matchQuery =
+        !q || product.name.toLowerCase().includes(q.toLowerCase());
       const matchCategory =
         !categories || categories.includes(product.category);
       const matchDepartment =
@@ -63,6 +69,7 @@ export class ProductsService {
       const matchMaxPrice = maxPrice === undefined || product.price <= maxPrice;
 
       return (
+        matchQuery &&
         matchCategory &&
         matchDepartment &&
         matchMaterial &&
@@ -70,5 +77,15 @@ export class ProductsService {
         matchMaxPrice
       );
     });
+
+    const hasNextPage = offset + limit < filtered.length;
+
+    return {
+      data: filtered.slice(offset, limit + offset),
+      total: filtered.length,
+      nextPage: hasNextPage ? offset + limit : null,
+      hasNextPage,
+      limit,
+    };
   }
 }

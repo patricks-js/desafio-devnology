@@ -9,6 +9,7 @@ export class ProductsController {
   @Get()
   getProducts(@Query() query: any) {
     const filters: ProductFiltersDTO = {
+      q: query.q ? query.q : undefined,
       categories: query.categories ? [].concat(query.categories) : undefined,
       departments: query.departments ? [].concat(query.departments) : undefined,
       materials: query.materials ? [].concat(query.materials) : undefined,
@@ -16,7 +17,10 @@ export class ProductsController {
       maxPrice: query.maxPrice ? Number(query.maxPrice) : undefined,
     };
 
-    return this.productsService.getFilteredProducts(filters);
+    const limit = query.limit ? Number(query.limit) : 10;
+    const offset = query.offset ? Number(query.offset) : 0;
+
+    return this.productsService.getFilteredProducts(filters, limit, offset);
   }
 
   @Get(":id")
