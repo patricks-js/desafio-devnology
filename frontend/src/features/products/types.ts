@@ -10,3 +10,9 @@ export type Product = {
   hasDiscount: boolean;
   discountPercentage?: number;
 };
+
+export type ProductFilters = {
+  categories: string[];
+  departments: string[];
+  materials: string[];
+};
