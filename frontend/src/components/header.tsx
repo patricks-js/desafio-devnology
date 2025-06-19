@@ -1,6 +1,5 @@
-import { Menu, Search, ShoppingCart, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCart } from "@/features/cart/hooks/use-cart";
+import { CartButton } from "@/features/cart/components/cart-button";
 import { useProductFilters } from "@/features/products/hooks/use-product-filters";
 
 type Props = {
@@ -19,8 +18,6 @@ type Props = {
 
 export function Header({ categories }: Props) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const { cartItemCount, openCart } = useCart();
   const { searchTerm, setSearchTerm, selectedCategory, setSelectedCategory } =
     useProductFilters();
 
@@ -58,18 +55,8 @@ export function Header({ categories }: Props) {
             </Select>
           </div>
 
-          <div className="relative flex items-center space-x-4">
-            <Button variant="outline" size="icon" onClick={openCart}>
-              <ShoppingCart />
-              {cartItemCount > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="-top-1 absolute right-2 flex size-4 items-center justify-center rounded-full p-0 text-[10px]"
-                >
-                  {cartItemCount}
-                </Badge>
-              )}
-            </Button>
+          <div className="flex items-center space-x-4">
+            <CartButton />
 
             <Button
               variant="ghost"

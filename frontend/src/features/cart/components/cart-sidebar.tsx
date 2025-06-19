@@ -1,4 +1,4 @@
-import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -37,36 +37,32 @@ export function CartSidebar() {
       : item.price;
   };
 
-  if (cart.length === 0) {
+  function renderEmptyCart() {
     return (
-      <Sheet open={isCartOpen} onOpenChange={closeCart}>
-        <SheetContent className="w-full px-6 sm:max-w-lg">
-          <SheetHeader>
-            <SheetTitle className="flex items-center">
-              <ShoppingBag className="mr-2 h-5 w-5" />
-              Carrinho de Compras
-            </SheetTitle>
-          </SheetHeader>
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <ShoppingBag className="mb-4 size-16 text-muted-foreground" />
-            <h3 className="mb-2 font-medium text-lg">
-              Seu carrinho está vazio
-            </h3>
-            <p className="mb-6 text-muted-foreground">
-              Adicione produtos para vê-los aqui.
-            </p>
-            <Button onClick={closeCart} className="w-full">
-              Continuar Comprando
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
+      <>
+        <SheetHeader>
+          <SheetTitle className="flex items-center">
+            <ShoppingBag className="mr-2 size-5" />
+            Carrinho de Compras
+          </SheetTitle>
+        </SheetHeader>
+        <div className="flex h-full flex-col items-center justify-center p-4 text-center">
+          <ShoppingBag className="mb-4 size-16 text-muted-foreground" />
+          <h3 className="mb-2 font-medium text-lg">Seu carrinho está vazio</h3>
+          <p className="mb-6 text-muted-foreground">
+            Adicione produtos para vê-los aqui.
+          </p>
+          <Button onClick={closeCart} className="w-full">
+            Continuar Comprando
+          </Button>
+        </div>
+      </>
     );
   }
 
-  return (
-    <Sheet open={isCartOpen} onOpenChange={closeCart}>
-      <SheetContent className="flex w-full flex-col px-6 sm:max-w-lg">
+  function renderCartItems() {
+    return (
+      <>
         <SheetHeader>
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center">
@@ -74,21 +70,18 @@ export function CartSidebar() {
               Carrinho ({cartItemCount} {cartItemCount === 1 ? "item" : "itens"}
               )
             </div>
-            <Button variant="ghost" size="icon" onClick={closeCart}>
-              <X className="size-4" />
-            </Button>
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto py-4">
+        <div className="flex-1 overflow-y-auto p-4">
           <div className="space-y-4">
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center space-x-4 rounded-lg p-4"
+                className="flex items-center space-x-4 rounded-lg"
               >
                 <img
-                  src={item.imagesUrl[0]}
+                  src={"https://placehold.co/64x64"}
                   alt={item.name}
                   className="size-16 rounded-md object-cover"
                 />
@@ -148,7 +141,7 @@ export function CartSidebar() {
           </div>
         </div>
 
-        <div className="space-y-4 border-t pt-4">
+        <div className="space-y-4 px-4 py-6">
           <Separator />
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
@@ -177,6 +170,14 @@ export function CartSidebar() {
             </Button>
           </div>
         </div>
+      </>
+    );
+  }
+
+  return (
+    <Sheet open={isCartOpen} onOpenChange={closeCart}>
+      <SheetContent className="flex w-full flex-col sm:max-w-lg">
+        {cart.length === 0 ? renderEmptyCart() : renderCartItems()}
       </SheetContent>
     </Sheet>
   );
