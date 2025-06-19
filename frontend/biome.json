@@ -23,6 +23,9 @@
         "noChildrenProp": "off",
         "useExhaustiveDependencies": "off"
       },
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      },
       "nursery": {
         "useSortedClasses": {
           "fix": "safe",
