@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { BrazilianProvidersService } from "../providers/services/brazilian-providers.service";
-import { EuropeanProvidersService } from "../providers/services/european-providers.service";
+import { BrazilianProvidersService } from "../../providers/services/brazilian-providers.service";
+import { EuropeanProvidersService } from "../../providers/services/european-providers.service";
 
 @Injectable()
 export class ProductsService {
