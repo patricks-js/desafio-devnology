@@ -8,6 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useCart } from "@/features/cart/hooks/use-cart";
+import { formatPrice } from "@/lib/utils";
 
 export function CartSidebar() {
   const {
@@ -24,16 +25,9 @@ export function CartSidebar() {
     closeCart();
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(price);
-  };
-
   const calculateDisplayPrice = (item: (typeof cart)[0]) => {
     return item.hasDiscount
-      ? item.price * (1 - (item.discountPercentage || 0))
+      ? Math.round(item.price * (1 - (item.discountPercentage || 0)))
       : item.price;
   };
 

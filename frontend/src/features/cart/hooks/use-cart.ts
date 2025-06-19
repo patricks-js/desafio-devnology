@@ -78,7 +78,7 @@ export function useCart() {
   const totalPrice = useMemo(() => {
     return cart.reduce((total, item) => {
       const itemPrice = item.hasDiscount
-        ? item.price * (1 - (item.discountPercentage || 0))
+        ? Math.round(item.price * (1 - (item.discountPercentage || 0)))
         : item.price;
       return total + itemPrice * item.quantity;
     }, 0);

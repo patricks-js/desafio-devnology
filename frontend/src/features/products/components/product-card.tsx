@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/features/cart/hooks/use-cart";
+import { formatPrice } from "@/lib/utils";
 import type { Product } from "../types";
 
 interface ProductCardProps {
@@ -16,16 +17,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const [imageLoading, setImageLoading] = useState(true);
   const { addToCart } = useCart();
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(price);
-  };
-
   const calculateDiscountedPrice = () => {
     if (product.hasDiscount && product.discountPercentage) {
-      return product.price * (1 - product.discountPercentage / 100);
+      return Math.round(product.price * (1 - product.discountPercentage / 100));
     }
     return product.price;
   };
@@ -52,7 +46,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.hasDiscount && (
             <div className="absolute top-2 right-2">
               <Badge className="bg-emerald-500 text-xs">
-                -{product.discountPercentage}%
+                -{Number(product.discountPercentage) * 100}%
               </Badge>
             </div>
           )}
@@ -83,6 +77,7 @@ export function ProductCard({ product }: ProductCardProps) {
               {product.material}
             </span>
           </div>
+
           <div className="flex items-center space-x-2">
             {product.hasDiscount ? (
               <>
