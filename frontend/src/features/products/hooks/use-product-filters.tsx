@@ -1,47 +1,66 @@
-import { createContext, type ReactNode, useContext, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { parseAsInteger, useQueryState, useQueryStates } from "nuqs";
+import { getProductFilters } from "../services/get-product-filters";
 
-type ProductFiltersContextType = {
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-};
-
-const ProductFiltersContext = createContext<
-  ProductFiltersContextType | undefined
->(undefined);
-
-type ProductFiltersProviderProps = {
-  children: ReactNode;
-};
-
-export function ProductFiltersProvider({
-  children,
-}: ProductFiltersProviderProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-
-  const value = {
-    searchTerm,
-    setSearchTerm,
-    selectedCategory,
-    setSelectedCategory,
-  };
-
-  return (
-    <ProductFiltersContext.Provider value={value}>
-      {children}
-    </ProductFiltersContext.Provider>
-  );
-}
+const MIN_PRICE_FILTER = 1;
+const MAX_PRICE_FILTER = 1000;
 
 export function useProductFilters() {
-  const context = useContext(ProductFiltersContext);
-  if (context === undefined) {
-    throw new Error(
-      "useProductFilters must be used within a ProductFiltersProvider",
-    );
+  const { data: availableFilters, isLoading: isLoadingFilters } = useQuery({
+    queryKey: ["product-filters"],
+    queryFn: getProductFilters,
+  });
+
+  const [searchTerm, setSearchTerm] = useQueryState("q", { defaultValue: "" });
+  const [selectedCategory, setSelectedCategory] = useQueryState("category", {
+    defaultValue: "",
+  });
+  const [selectedDepartment, setSelectedDepartment] =
+    useQueryState("department");
+  const [selectedMaterial, setSelectedMaterial] = useQueryState("material");
+  const [priceRange, setPriceRange] = useQueryStates({
+    min: parseAsInteger.withDefault(MIN_PRICE_FILTER),
+    max: parseAsInteger.withDefault(MAX_PRICE_FILTER),
+  });
+
+  function clearFilter(
+    key?: "category" | "department" | "material" | "priceRange",
+  ) {
+    switch (key) {
+      case "category":
+        setSelectedCategory(null);
+        break;
+      case "department":
+        setSelectedDepartment(null);
+        break;
+      case "material":
+        setSelectedMaterial(null);
+        break;
+      case "priceRange":
+        setPriceRange({ min: MIN_PRICE_FILTER, max: MAX_PRICE_FILTER });
+        break;
+      default:
+        setSelectedCategory(null);
+        setSelectedDepartment(null);
+        setSelectedMaterial(null);
+        setPriceRange({ min: MIN_PRICE_FILTER, max: MAX_PRICE_FILTER });
+        break;
+    }
   }
 
-  return context;
+  return {
+    searchTerm,
+    selectedCategory,
+    selectedDepartment,
+    selectedMaterial,
+    priceRange,
+    setSearchTerm,
+    setSelectedCategory,
+    setSelectedDepartment,
+    setSelectedMaterial,
+    setPriceRange,
+    clearFilter,
+    availableFilters,
+    isLoadingFilters,
+  };
 }
