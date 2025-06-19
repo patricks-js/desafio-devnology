@@ -1,6 +1,8 @@
+import { ProductDTO } from "@/modules/providers/dtos/product.dto";
 import { Injectable } from "@nestjs/common";
 import { BrazilianProvidersService } from "../../providers/services/brazilian-providers.service";
 import { EuropeanProvidersService } from "../../providers/services/european-providers.service";
+import { ProductFiltersDTO } from "../dtos/product-filters.dto";
 
 @Injectable()
 export class ProductsService {
@@ -18,9 +20,9 @@ export class ProductsService {
       this.europeanProvidersService.getProducts(),
     ]);
 
-    const allProducts = [...brazilianProducts, ...europeanProducts];
+    const products = [...brazilianProducts, ...europeanProducts];
 
-    return allProducts;
+    return products;
   }
 
   async getProductById(id: string) {
@@ -32,5 +34,41 @@ export class ProductsService {
     }
 
     return this.europeanProvidersService.getProductById(productId);
+  }
+
+  async getFilteredProducts(filters: ProductFiltersDTO): Promise<ProductDTO[]> {
+    const products = await this.getProducts();
+
+    const cleanArray = (arr?: string[]) =>
+      arr?.filter((v) => typeof v === "string" && v.trim() !== "") ?? undefined;
+
+    const categories = cleanArray(filters.categories);
+    const departments = cleanArray(filters.departments);
+    const materials = cleanArray(filters.materials);
+
+    const minPrice = Number.isNaN(Number(filters.minPrice))
+      ? undefined
+      : Number(filters.minPrice);
+    const maxPrice = Number.isNaN(Number(filters.maxPrice))
+      ? undefined
+      : Number(filters.maxPrice);
+
+    return products.filter((product) => {
+      const matchCategory =
+        !categories || categories.includes(product.category);
+      const matchDepartment =
+        !departments || departments.includes(product.department);
+      const matchMaterial = !materials || materials.includes(product.material);
+      const matchMinPrice = minPrice === undefined || product.price >= minPrice;
+      const matchMaxPrice = maxPrice === undefined || product.price <= maxPrice;
+
+      return (
+        matchCategory &&
+        matchDepartment &&
+        matchMaterial &&
+        matchMinPrice &&
+        matchMaxPrice
+      );
+    });
   }
 }
