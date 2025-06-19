@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/features/cart/hooks/use-cart";
 import type { Product } from "../types";
 
@@ -31,13 +32,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <Card className="group hover:-translate-y-1 transform overflow-hidden transition-all duration-300 hover:shadow-xl">
+      <Card className="group overflow-hidden pt-0">
         <div className="relative overflow-hidden">
-          {imageLoading && (
-            <div className="absolute inset-0 animate-pulse bg-gray-200" />
-          )}
+          {imageLoading && <Skeleton className="h-64 w-full" />}
           <img
-            src={product.imagesUrl[0]}
+            src={"https://placehold.co/256x256?text=Product+Image"}
             alt={product.name}
             className={`h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105 ${
               imageLoading ? "opacity-0" : "opacity-100"
@@ -57,8 +56,8 @@ export function ProductCard({ product }: ProductCardProps) {
               </Badge>
             </div>
           )}
-          <div className="absolute top-12 right-2 opacity-0 transition-opacity group-hover:opacity-100">
-            <Button variant="secondary" size="icon" asChild className="h-8 w-8">
+          <div className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <Button variant="secondary" size="icon" asChild className="size-8">
               <Link to="/products/$id" params={{ id: product.id }}>
                 <Eye />
               </Link>
@@ -66,21 +65,23 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
 
-        <CardContent className="p-4">
+        <CardContent>
           <div className="mb-2">
             <Badge variant="outline" className="mb-2 text-xs">
               {product.category}
             </Badge>
           </div>
-          <h3 className="mb-2 line-clamp-2 font-semibold text-lg transition-colors group-hover:text-blue-600">
+          <h3 className="mb-2 line-clamp-2 font-semibold text-lg">
             {product.name}
           </h3>
-          <p className="mb-3 line-clamp-2 text-gray-600 text-sm">
+          <p className="mb-3 line-clamp-2 text-muted-foreground text-sm">
             {product.description}
           </p>
           <div className="mb-3 flex items-center">
-            <Tag className="mr-1 h-4 w-4 text-gray-500" />
-            <span className="text-gray-500 text-sm">{product.material}</span>
+            <Tag className="mr-1 size-4 text-muted-foreground" />
+            <span className="text-muted-foreground text-sm">
+              {product.material}
+            </span>
           </div>
           <div className="flex items-center space-x-2">
             {product.hasDiscount ? (
@@ -93,19 +94,16 @@ export function ProductCard({ product }: ProductCardProps) {
                 </div>
               </>
             ) : (
-              <div className="font-bold text-2xl text-blue-600">
+              <div className="font-bold text-2xl text-primary">
                 {formatPrice(product.price)}
               </div>
             )}
           </div>
         </CardContent>
 
-        <CardFooter className="p-4 pt-0">
-          <Button
-            onClick={() => addToCart(product)}
-            className="w-full bg-blue-600 transition-colors hover:bg-blue-700"
-          >
-            <ShoppingCart className="mr-2 h-4 w-4" />
+        <CardFooter>
+          <Button onClick={() => addToCart(product)} className="w-full">
+            <ShoppingCart />
             Adicionar ao Carrinho
           </Button>
         </CardFooter>
