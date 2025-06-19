@@ -1,5 +1,5 @@
 import { Filter, Search, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
@@ -43,6 +43,54 @@ export function ProductFiltersToolbar() {
 
   const clearAllFilters = () => clearFilter();
 
+  const [searchInput, setSearchInput] = useState(searchTerm ?? "");
+  const debouncedSearch = useDebouncedValue(searchInput, 400);
+
+  const [localPriceRange, setLocalPriceRange] = useState<[number, number]>([
+    priceRange.min,
+    priceRange.max,
+  ]);
+  const debouncedPriceRange = useDebouncedValue(localPriceRange, 400);
+
+  function useDebouncedValue<T>(value: T, delay: number): T {
+    const [debounced, setDebounced] = useState(value);
+
+    useEffect(() => {
+      const handler = setTimeout(() => setDebounced(value), delay);
+      return () => clearTimeout(handler);
+    }, [value, delay]);
+
+    return debounced;
+  }
+
+  useEffect(() => {
+    if (debouncedSearch !== (searchTerm ?? "")) {
+      setSearchTerm(debouncedSearch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
+  // Sync debounced price range with filter
+  useEffect(() => {
+    if (
+      debouncedPriceRange[0] !== priceRange.min ||
+      debouncedPriceRange[1] !== priceRange.max
+    ) {
+      setPriceRange({
+        min: debouncedPriceRange[0],
+        max: debouncedPriceRange[1],
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedPriceRange]);
+
+  // Keep local state in sync with filter changes (e.g., clear)
+  useEffect(() => {
+    setSearchInput(searchTerm ?? "");
+  }, [searchTerm]);
+  useEffect(() => {
+    setLocalPriceRange([priceRange.min, priceRange.max]);
+  }, [priceRange.min, priceRange.max]);
+
   return (
     <div className="sticky top-16 z-40 border-b bg-white">
       <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 lg:px-8">
@@ -52,8 +100,8 @@ export function ProductFiltersToolbar() {
             <Input
               type="text"
               placeholder="Buscar produtos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="w-full py-2 pr-4 pl-10"
               disabled={isLoadingFilters}
             />
@@ -167,19 +215,16 @@ export function ProductFiltersToolbar() {
                       <Slider
                         min={1}
                         max={1000}
-                        step={10}
-                        value={[priceRange.min, priceRange.max]}
+                        step={1}
+                        value={localPriceRange}
                         onValueChange={(values: number[]) =>
-                          setPriceRange({
-                            min: values[0],
-                            max: values[1],
-                          })
+                          setLocalPriceRange([values[0], values[1]])
                         }
                         className="w-56"
                       />
                       <div className="flex justify-between text-muted-foreground text-xs">
-                        <span>Mín: R$ {priceRange.min}</span>
-                        <span>Máx: R$ {priceRange.max}</span>
+                        <span>Mín: R$ {localPriceRange[0]}</span>
+                        <span>Máx: R$ {localPriceRange[1]}</span>
                       </div>
                     </div>
                   </div>

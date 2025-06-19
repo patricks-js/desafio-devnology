@@ -15,4 +15,6 @@ export type ProductFilters = {
   categories: string[];
   departments: string[];
   materials: string[];
+  minPrice?: number;
+  maxPrice?: number;
 };

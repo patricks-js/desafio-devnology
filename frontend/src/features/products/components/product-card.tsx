@@ -28,7 +28,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <>
       <Card className="group overflow-hidden pt-0">
         <div className="relative overflow-hidden">
-          {imageLoading && <Skeleton className="h-64 w-full" />}
+          {imageLoading && <Skeleton className="h-32 w-full" />}
           <img
             src={"https://placehold.co/256x256?text=Product+Image"}
             alt={product.name}

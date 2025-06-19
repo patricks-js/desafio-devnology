@@ -11,10 +11,8 @@ export function useProductFilters() {
     queryFn: getProductFilters,
   });
 
-  const [searchTerm, setSearchTerm] = useQueryState("q", { defaultValue: "" });
-  const [selectedCategory, setSelectedCategory] = useQueryState("category", {
-    defaultValue: "",
-  });
+  const [searchTerm, setSearchTerm] = useQueryState("q");
+  const [selectedCategory, setSelectedCategory] = useQueryState("category");
   const [selectedDepartment, setSelectedDepartment] =
     useQueryState("department");
   const [selectedMaterial, setSelectedMaterial] = useQueryState("material");
