@@ -4,15 +4,16 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useCart } from "@/features/cart/hooks/use-cart";
 import type { Product } from "../types";
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (product: Product) => void;
 }
 
-export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const [imageLoading, setImageLoading] = useState(true);
+  const { addToCart } = useCart();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -101,7 +102,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
         <CardFooter className="p-4 pt-0">
           <Button
-            onClick={() => onAddToCart(product)}
+            onClick={() => addToCart(product)}
             className="w-full bg-blue-600 transition-colors hover:bg-blue-700"
           >
             <ShoppingCart className="mr-2 h-4 w-4" />

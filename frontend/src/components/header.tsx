@@ -58,13 +58,13 @@ export function Header({ categories }: Props) {
             </Select>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="relative flex items-center space-x-4">
             <Button variant="outline" size="icon" onClick={openCart}>
               <ShoppingCart />
               {cartItemCount > 0 && (
                 <Badge
                   variant="destructive"
-                  className="-top-2 -right-2 absolute flex size-5 items-center justify-center rounded-full p-0 text-xs"
+                  className="-top-1 absolute right-2 flex size-4 items-center justify-center rounded-full p-0 text-[10px]"
                 >
                   {cartItemCount}
                 </Badge>
