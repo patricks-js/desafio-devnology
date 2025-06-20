@@ -11,14 +11,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
 model Order {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  customerId  Int      @map("customer_id")
-  totalAmount Float    @map("total_amount")
-  status      String
+  id          Int         @id @default(autoincrement())
+  customerId  String      @map("customer_id")
+  totalAmount Float       @map("total_amount")
+  status      OrderStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  OrderItem OrderItem[]
 
   @@index([customerId])
   @@map("orders")
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int      @map("order_id")
+  productId String   @map("product_id")
+  quantity  Int      @default(1)
+  price     Int      @default(0)
+  subtotal  Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("order_items")
 }

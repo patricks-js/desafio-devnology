@@ -19,6 +19,10 @@ class CreateOrderItemDto {
 }
 
 export class CreateOrderDto {
+  @IsNotEmpty()
+  @IsString()
+  customerId: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateOrderItemDto)

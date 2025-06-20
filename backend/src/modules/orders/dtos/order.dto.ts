@@ -7,9 +7,10 @@ class OrderItemDetailsDto {
 }
 
 export class OrderDto {
-  id: string;
+  id: number;
+  customerId: string;
   items: OrderItemDetailsDto[];
   totalAmount: number;
-  status: "PENDING" | "COMPLETED" | "CANCELED";
+  status: "PENDING" | "COMPLETED" | "CANCELLED";
   createdAt: Date;
 }

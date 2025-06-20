@@ -35,6 +35,12 @@ export class ProductsService {
     return this.europeanProvidersService.getProductById(productId);
   }
 
+  async getProductsByIds(ids: string[]) {
+    const products = await this.getProducts();
+
+    return products.filter((product) => ids.includes(product.id));
+  }
+
   async getFilteredProducts(
     filters: ProductFiltersDTO,
     limit = 10,
