@@ -16,3 +16,20 @@ export type OrderDto = {
   status: "PENDING" | "COMPLETED" | "CANCELLED";
   createdAt: string;
 };
+
+export type OrderResponse = {
+  createdAt: string;
+  customerId: string;
+  id: number;
+  items: {
+    product: {
+      id: string;
+      name: string | null;
+      price: number;
+    };
+    quantity: number;
+    subtotal: number;
+  }[];
+  status: string;
+  totalAmount: number;
+};

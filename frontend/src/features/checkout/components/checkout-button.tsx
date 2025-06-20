@@ -31,7 +31,7 @@ export function CheckoutButton({
       }
       if (order) {
         toast.success("Pedido criado com sucesso");
-        navigate({ to: "/" });
+        navigate({ to: "/checkout" });
       }
     } catch (error) {
       console.error("Erro ao processar o checkout:", error);

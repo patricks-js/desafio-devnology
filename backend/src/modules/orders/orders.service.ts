@@ -20,6 +20,9 @@ export class OrdersService {
       include: {
         OrderItem: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return orders.map((order) => ({
