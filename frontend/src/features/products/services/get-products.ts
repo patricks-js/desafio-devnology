@@ -9,11 +9,24 @@ type ProductQueryFilters = {
   maxPrice?: number | null;
 };
 
-export async function getProducts(filters: ProductQueryFilters) {
-  const params = new URLSearchParams();
+type PaginatedProductsResponse = {
+  data: Product[];
+  nextPage: number | null;
+  total: number;
+  hasNextPage: boolean;
+  limit: number;
+};
 
-  console.log(filters);
-  console.log(params);
+export async function getProducts({
+  filters,
+  page = 0,
+  limit = 12,
+}: {
+  filters: ProductQueryFilters;
+  page?: number;
+  limit?: number;
+}) {
+  const params = new URLSearchParams();
 
   if (filters.q) params.append("q", filters.q);
   if (filters.category) params.append("categories", filters.category);
@@ -24,8 +37,10 @@ export async function getProducts(filters: ProductQueryFilters) {
   if (filters.maxPrice)
     params.append("maxPrice", String(filters.maxPrice * 100));
 
+  params.append("offset", String(page));
+  params.append("limit", String(limit));
+
   const queryString = params.toString();
-  console.log(queryString);
 
   const response = await fetch(`/api/products?${queryString}`);
 
@@ -33,7 +48,7 @@ export async function getProducts(filters: ProductQueryFilters) {
     throw new Error("Failed to fetch filtered products");
   }
 
-  const data = (await response.json()) as Product[];
+  const data = (await response.json()) as PaginatedProductsResponse;
 
   return data;
 }

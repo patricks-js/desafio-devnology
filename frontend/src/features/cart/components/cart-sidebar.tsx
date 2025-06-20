@@ -72,7 +72,7 @@ export function CartSidebar() {
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center space-x-4 rounded-lg"
+                className="flex items-center space-x-4 rounded-lg bg-secondary p-4"
               >
                 <img
                   src={"https://placehold.co/64x64"}
@@ -149,14 +149,11 @@ export function CartSidebar() {
             <Separator />
             <div className="flex justify-between font-semibold text-lg">
               <span>Total:</span>
-              <span className="text-sky-600">{formatPrice(totalPrice)}</span>
+              <span>{formatPrice(totalPrice)}</span>
             </div>
           </div>
           <div className="space-y-2">
-            <Button
-              onClick={handleCheckout}
-              className="w-full bg-sky-600 hover:bg-sky-700"
-            >
+            <Button onClick={handleCheckout} className="w-full">
               Finalizar Compra
             </Button>
             <Button variant="outline" onClick={closeCart} className="w-full">

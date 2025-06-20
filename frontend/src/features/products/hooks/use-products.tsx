@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { getProducts } from "../services/get-products";
 import { useProductFilters } from "./use-product-filters";
 
@@ -21,17 +22,31 @@ export function useProducts() {
   };
 
   const {
-    data: products,
+    data,
     error,
     isPending,
-  } = useQuery({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["products", filters],
-    queryFn: () => getProducts(filters),
+    queryFn: ({ pageParam }) => getProducts({ filters, page: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextPage;
+    },
   });
 
+  const products = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) ?? [];
+  }, [data]);
+
   return {
-    products: products ?? [],
+    products,
     isPending,
     error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   };
 }
