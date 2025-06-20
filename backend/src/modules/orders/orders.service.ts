@@ -12,8 +12,11 @@ export class OrdersService {
     private readonly prismaService: PrismaService,
   ) {}
 
-  async getAll() {
+  async getAllByCustomer(customerId: string) {
     const orders = await this.prismaService.order.findMany({
+      where: {
+        customerId,
+      },
       include: {
         OrderItem: true,
       },
