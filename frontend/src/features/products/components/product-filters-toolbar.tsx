@@ -1,3 +1,4 @@
+import { useLocation } from "@tanstack/react-router";
 import { Filter, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,9 +15,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
 import { useProductFilters } from "../hooks/use-product-filters";
 
 export function ProductFiltersToolbar() {
+  const { pathname } = useLocation();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const {
     searchTerm,
@@ -67,9 +70,7 @@ export function ProductFiltersToolbar() {
     if (debouncedSearch !== (searchTerm ?? "")) {
       setSearchTerm(debouncedSearch);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
-  // Sync debounced price range with filter
   useEffect(() => {
     if (
       debouncedPriceRange[0] !== priceRange.min ||
@@ -80,10 +81,8 @@ export function ProductFiltersToolbar() {
         max: debouncedPriceRange[1],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedPriceRange]);
 
-  // Keep local state in sync with filter changes (e.g., clear)
   useEffect(() => {
     setSearchInput(searchTerm ?? "");
   }, [searchTerm]);
@@ -92,7 +91,12 @@ export function ProductFiltersToolbar() {
   }, [priceRange.min, priceRange.max]);
 
   return (
-    <div className="sticky top-16 z-40 border-b bg-white">
+    <div
+      className={cn(
+        "sticky top-16 z-40 border-b bg-white",
+        pathname.includes("products") && "hidden",
+      )}
+    >
       <div className="mx-auto max-w-[1440px] px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-4">
           <div className="relative max-w-md flex-1">
