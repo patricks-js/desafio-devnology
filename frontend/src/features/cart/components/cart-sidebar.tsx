@@ -8,6 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useCart } from "@/features/cart/hooks/use-cart";
+import { CheckoutButton } from "@/features/checkout/components/checkout-button";
 import { formatPrice } from "@/lib/utils";
 
 export function CartSidebar() {
@@ -20,10 +21,6 @@ export function CartSidebar() {
     updateQuantity,
     removeFromCart,
   } = useCart();
-
-  const handleCheckout = () => {
-    closeCart();
-  };
 
   const calculateDisplayPrice = (item: (typeof cart)[0]) => {
     return item.hasDiscount
@@ -153,9 +150,7 @@ export function CartSidebar() {
             </div>
           </div>
           <div className="space-y-2">
-            <Button onClick={handleCheckout} className="w-full">
-              Finalizar Compra
-            </Button>
+            <CheckoutButton />
             <Button variant="outline" onClick={closeCart} className="w-full">
               Continuar Comprando
             </Button>

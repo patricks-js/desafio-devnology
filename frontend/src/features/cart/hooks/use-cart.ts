@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { toast } from "sonner";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Product } from "@/features/products/types";
@@ -39,6 +40,8 @@ const useCartStore = create<CartStoreState>()(
           } else {
             set({ cart: [...cart, { ...product, quantity: 1 }] });
           }
+
+          toast.success("Produto adicionado ao carrinho");
         },
         removeFromCart: (productId) => {
           set((state) => ({
