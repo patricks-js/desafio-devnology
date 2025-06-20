@@ -13,7 +13,28 @@ export class OrdersService {
   ) {}
 
   async getAll() {
-    return [];
+    const orders = await this.prismaService.order.findMany({
+      include: {
+        OrderItem: true,
+      },
+    });
+
+    return orders.map((order) => ({
+      id: order.id,
+      customerId: order.customerId,
+      status: order.status,
+      totalAmount: order.totalAmount,
+      createdAt: order.createdAt,
+      items: order.OrderItem.map((item) => ({
+        product: {
+          id: item.productId,
+          name: item.productName,
+          price: item.price,
+        },
+        quantity: item.quantity,
+        subtotal: item.subtotal,
+      })),
+    }));
   }
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderDto> {
@@ -26,6 +47,7 @@ export class OrdersService {
 
       return {
         productId: product.id,
+        productName: product.name,
         quantity: product.quantity,
         price: product.price,
         subtotal,
