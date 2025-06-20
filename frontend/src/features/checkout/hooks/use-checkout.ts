@@ -7,11 +7,19 @@ import type { OrderDto } from "../types";
 export function useCheckout() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const { cart, clearCart } = useCart();
-
   const ensureGuestId = useGuestUser((state) => state.ensureGuestId);
 
-  async function processCheckout(): Promise<OrderDto | null> {
-    if (cart.length === 0) {
+  async function processCheckout(
+    itemsOverride?: { productId: string; quantity: number }[],
+  ): Promise<OrderDto | null> {
+    const items =
+      itemsOverride ??
+      cart.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      }));
+
+    if (items.length === 0) {
       console.error("Carrinho vazio, checkout não pode continuar.");
       return null;
     }
@@ -30,14 +38,11 @@ export function useCheckout() {
     try {
       const orderPayload = {
         customerId,
-        items: cart.map((item) => ({
-          productId: item.id,
-          quantity: item.quantity,
-        })),
+        items,
       };
 
       const createdOrder = await createOrder(orderPayload);
-      clearCart();
+      if (!itemsOverride) clearCart();
       return createdOrder;
     } catch (error) {
       console.error("Falha ao processar o checkout:", error);

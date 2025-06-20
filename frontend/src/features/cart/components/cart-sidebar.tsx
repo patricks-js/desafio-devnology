@@ -150,7 +150,7 @@ export function CartSidebar() {
             </div>
           </div>
           <div className="space-y-2">
-            <CheckoutButton />
+            <CheckoutButton className="w-full">Finalizar Compra</CheckoutButton>
             <Button variant="outline" onClick={closeCart} className="w-full">
               Continuar Comprando
             </Button>
