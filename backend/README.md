@@ -26,7 +26,7 @@ Este backend é uma aplicação [NestJS](https://nestjs.com/) responsável por l
    ```bash
    pnpm install
    ```
-3. Crie o arquivo `.env` com as variáveis de ambiente necessárias:
+3. Crie o arquivo `.env` com as variáveis de ambiente necessárias (veja o `.env.example`):
 
    * `BRAZILIAN_PROVIDER_API_URL`
    * `EUROPEAN_PROVIDER_API_URL`
