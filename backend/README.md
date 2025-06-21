@@ -28,6 +28,7 @@ Este backend é uma aplicação [NestJS](https://nestjs.com/) responsável por l
    ```
 3. Crie o arquivo `.env` com as variáveis de ambiente necessárias (veja o `.env.example`):
 
+   * `DATABASE_URL`
    * `BRAZILIAN_PROVIDER_API_URL`
    * `EUROPEAN_PROVIDER_API_URL`
 
