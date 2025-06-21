@@ -28,3 +28,21 @@ Este projeto serviu como um importante passo no meu aprendizado de Flutter. Algu
 - Melhoria da arquitetura geral do app para maior escalabilidade.
 
 Estou animado com a possibilidade de continuar evoluindo minhas habilidades em desenvolvimento mobile e confiante de que posso rapidamente me tornar proficiente em Flutter.
+
+## Como Rodar o App
+
+Para executar o aplicativo mobile Flutter localmente, siga os passos abaixo:
+
+1. **Pré-requisitos**:
+  - Ter p Flutter instalado em sua máquina.
+  - Certifique-se de ter um emulador Android/iOS configurado ou um dispositivo físico conectado.
+
+2. **Instale as dependências**:
+  ```bash
+  flutter pub get
+  ```
+
+3. **Execute o app**:
+  ```bash
+  flutter run
+  ```
