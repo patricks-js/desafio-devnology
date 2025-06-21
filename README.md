@@ -9,8 +9,11 @@ Este projeto é a solução do desafio técnico full stack da Devnology. O proje
 O projeto está organizado em 3 partes principais:
 
 -   `backend/`: Uma aplicação NestJS que serve como a API da plataforma.
+    - [Veja instruções detalhadas no README do backend](./backend/README.md)
 -   `frontend/`: Uma aplicação React para a interface web.
+    - [Veja instruções detalhadas no README do frontend](./frontend/README.md)
 -   `mobile/`: Um aplicativo simples em Flutter.
+    - [Veja instruções detalhadas no README do mobile](./mobile/README.md)
 
 ## Funcionalidades Principais
 
@@ -41,3 +44,8 @@ O projeto está organizado em 3 partes principais:
 - **Roteamento**: O **TanStack Router** está configurado com roteamento baseado em arquivos — o que deixa tudo mais intuitivo e ainda garante tipagem nas rotas.
 - **UI e estilo**: Usei **Tailwind CSS** junto com os componentes do **Shadcn/ui**. Isso ajuda a construir a interface mais rápido, mantendo controle total sobre os componentes (já que o código é copiado pro projeto).
 - **Filtros na URL**: Com a lib **`nuqs`**, consegui sincronizar os filtros (como categoria e preço) com a URL. Isso deixa a navegação mais flexível — dá pra compartilhar links com filtros ou salvar nos favoritos, por exemplo.
+
+### Mobile
+
+- **Framework**: O aplicativo mobile foi desenvolvido em **Flutter**, permitindo compatibilidade com Android e iOS.
+- **Funcionalidades**: O app permite navegação pelo catálogo, busca, filtros e simulação de compra, sincronizando com o backend.
